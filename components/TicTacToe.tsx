@@ -73,8 +73,14 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
 
   const getAiMove = useCallback(
     (board: Array<string | null>): number => {
-      const ai = "O";
-      const player = "X";
+      const ai: string = "O";
+      const player: string = "X";
+
+      const corners: number[] = [0, 2, 6, 8];
+      const edges: number[] = [1, 3, 5, 7];
+
+      const centerChance: number = 0.3; // 70% to pick centre if empty
+      const cornerChance: number = 0.5; // 50% to pick corner if empty
 
       const findWinningMove = (symbol: string) => {
         for (const combo of winningCombos) {
@@ -97,13 +103,13 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
       const blockMove = findWinningMove(player);
       if (blockMove !== null) return blockMove;
 
-      if (board[4] === null && Math.random() > 0.3) return 4;
+      if (board[4] === null && Math.random() > centerChance) return 4;
 
-      const cornerMove = [0, 2, 6, 8].filter((index) => board[index] === null);
-      if (cornerMove.length > 0 && Math.random() > 0.5)
+      const cornerMove = corners.filter((index) => board[index] === null);
+      if (cornerMove.length > 0 && Math.random() > cornerChance)
         return cornerMove[Math.floor(Math.random() * cornerMove.length)];
 
-      const edgesMove = [1, 3, 5, 7].filter((index) => board[index] === null);
+      const edgesMove = edges.filter((index) => board[index] === null);
       if (edgesMove.length > 0)
         return edgesMove[Math.floor(Math.random() * edgesMove.length)];
 
